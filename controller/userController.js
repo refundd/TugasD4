@@ -1,4 +1,4 @@
-const User = require('../user');
+const User = require('../model/user');
 
 const loginUser = async (req, res) => {
     const { email, password } = req.body;
@@ -74,14 +74,26 @@ const removeUser = async (req, res) => {
 };
 
 const addUser = async (req, res) => {
-    const { name, email, password, linkImgProfile } = req.body;
-
     try {
-        const newUser = new User({ name, email, password, linkImgProfile });
+        const { name, email, password, linkImgProfile } = req.body;
+        const existingUser = await User.findOne({ email });
+        if (existingUser) {
+            return res.status(400).json({ message: 'Email sudah terdaftar. Gunakan email lain.' });
+        }
+        const userId = await getNextSequenceValue('user_id');
+
+        const newUser = new User({
+            _id: userId,
+            name,
+            email,
+            password,
+            linkImgProfile
+        });
+
         await newUser.save();
-        res.json({ message: 'User berhasil ditambahkan', user: newUser });
+        res.status(201).json({ message: 'User berhasil ditambahkan', user: newUser });
     } catch (err) {
-        res.status(500).json({ message: 'Gagal menambahkan user', error: err.message });
+        res.status(500).json({ message: 'Terjadi kesalahan saat menambahkan user', error: err.message });
     }
 };
 

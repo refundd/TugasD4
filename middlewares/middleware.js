@@ -1,5 +1,5 @@
 const { check, validationResult } = require('express-validator');
-const User = require('../user');
+const User = require('../model/user');
 
 const validateUser = [
     check('name').isLength({ min: 3, max: 20 }).withMessage('Nama harus antara 3 dan 20 karakter'),

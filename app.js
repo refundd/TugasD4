@@ -2,6 +2,7 @@ const express = require('express');
 const session = require('express-session');
 const mongoose = require('mongoose');
 const userRouter = require('./routes/userRouter');
+const adminRouter = require('./routes/adminRouter');
 
 const app = express();
 
@@ -21,8 +22,9 @@ app.use(session({
 }));
 
 app.use('/user', userRouter);
+app.use('/admin', adminRouter);
 
 const PORT = 3000;
 app.listen(PORT, () => {
-    console.log(`Server berjalan di port ${PORT}`);
+    console.log(`Server berjalan di http://localhost:${PORT}`);
 });
